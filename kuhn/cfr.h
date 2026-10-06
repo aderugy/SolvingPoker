@@ -8,6 +8,6 @@
 
 #include "tree.h"
 
-double cfr(Tree &tree, const std::string &c, const std::string &h, double p0, double p1);
+double cfr(Tree &tree, const std::string &c, const std::string &h, double reachOop, double reachIp);
 
 #endif //SOLVINGPOKER_CFR_H

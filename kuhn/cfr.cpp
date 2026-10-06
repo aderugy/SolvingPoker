@@ -10,14 +10,14 @@
 #include "player.h"
 #include "tree.h"
 
-double cfr(Tree &tree, const std::string &c, const std::string &h, const double p0, const double p1) {
+double cfr(Tree &tree, const std::string &c, const std::string &h, const double reachOop, const double reachIp) {
     // The player that has to take a decision
     const int player = p(h);
 
     // We have reached a terminal node: we return the utility expressed in the current player POV
     if (is_terminal(h)) {
         // Terminal utility returns the utility in P0 POV
-        return (player == 0 ? 1 : -1) * terminal_utility(c, h);
+        return (player == OOP ? IP : -1) * terminal_oop_utility(c, h);
     }
 
     double infoset_ev = 0;
@@ -32,11 +32,11 @@ double cfr(Tree &tree, const std::string &c, const std::string &h, const double 
 
         // Recursion
         // We compute the counterfactual regret, updating the reach with the strategy at step t
-        if (player == 0) {
-            action_ev[a] = -cfr(tree, c, h + action, tree[infoset].actionProbability(a) * p0, p1);
+        if (player == OOP) {
+            action_ev[a] = -cfr(tree, c, h + action, tree[infoset].actionProbability(a) * reachOop, reachIp);
         }
-        else if (player == 1) {
-            action_ev[a] = -cfr(tree, c, h + action, p0, tree[infoset].actionProbability(a) * p1);
+        else if (player == IP) {
+            action_ev[a] = -cfr(tree, c, h + action, reachOop, tree[infoset].actionProbability(a) * reachIp);
         }
 
         // We update the infoset counterfactual regret weighted by the strategy at step t
@@ -47,11 +47,11 @@ double cfr(Tree &tree, const std::string &c, const std::string &h, const double 
     for (int a = 0; a < ACTIONS.length(); a++) {
         // The probability that we reached this infoset regardless of the actions of the active player
         // Basically the product of the probabilities of the actions taken by the opponent and chance nodes
-        const double invert_reach = player == 0 ? p1 : p0;
+        const double invert_reach = player == OOP ? reachIp : reachOop;
 
         // The probability that we reached this infoset regardless of the actions of the opponent
         // Basically the product of the probability of the decisions we've taken to be here
-        const double reach = player == 0 ? p0 : p1;
+        const double reach = player == OOP ? reachOop : reachIp;
 
         tree[infoset].cumulativeRegret[a] += invert_reach * (action_ev[a] - infoset_ev);
         tree[infoset].cumulativeStrategy[a] += reach * tree[infoset].actionProbability(a);

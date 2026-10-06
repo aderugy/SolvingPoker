@@ -14,9 +14,10 @@ public:
     Node() = default;
 
     [[nodiscard]] double actionProbability(int a) const;
+    [[nodiscard]] double averageStrategy(int a) const;
 };
 
 bool is_terminal(const std::string &h);
-int terminal_utility(const std::string &c, const std::string &h);
+int terminal_oop_utility(const std::string &c, const std::string &h);
 
 #endif //SOLVINGPOKER_NODE_H
