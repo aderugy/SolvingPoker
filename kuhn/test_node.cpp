@@ -94,7 +94,7 @@ const std::vector<Case> kCases = {
 void test_terminal_utility_table() {
     std::cout << "terminal_utility (table)\n";
     for (const auto &tc : kCases)
-        check_eq(terminal_utility(tc.cards, tc.history),
+        check_eq(terminal_oop_utility(tc.cards, tc.history),
                  tc.expect,
                  std::string(tc.cards) + " / " + tc.history);
 }
@@ -111,37 +111,37 @@ void test_invariants() {
     //    every line puts money at risk.
     for (const auto &c : kDeals)
         for (const auto &h : kTerminal)
-            check(terminal_utility(c, h) != 0, "nonzero: " + c + " / " + h);
+            check(terminal_oop_utility(c, h) != 0, "nonzero: " + c + " / " + h);
 
     // 2. Showdowns are antisymmetric: swapping the two cards swaps the winner,
     //    so the payoff to player 0 must negate.
     for (const auto &c : kDeals)
         for (const auto &h : kShowdown)
-            check(terminal_utility(c, h) == -terminal_utility(swap_deal(c), h),
+            check(terminal_oop_utility(c, h) == -terminal_oop_utility(swap_deal(c), h),
                   "showdown antisymmetry: " + c + " / " + h);
 
     // 3. Folds don't reach a showdown, so the payoff cannot depend on the deal.
     for (const auto &h : kFold) {
-        const int ref = terminal_utility(kDeals[0], h);
+        const int ref = terminal_oop_utility(kDeals[0], h);
         for (const auto &c : kDeals)
-            check(terminal_utility(c, h) == ref,
+            check(terminal_oop_utility(c, h) == ref,
                   "fold is card-independent: " + c + " / " + h);
     }
 
     // 4. The two fold lines are folded by *different* players, so they must
     //    have opposite signs.
-    check(terminal_utility("KJ", "bx") * terminal_utility("KJ", "xbx") < 0,
+    check(terminal_oop_utility("KJ", "bx") * terminal_oop_utility("KJ", "xbx") < 0,
           "bx and xbx favour opposite players");
 
     // 5. A called bet moves more money than a check-down, so the showdown
     //    winner must gain strictly more in "bb" than in "xx".
     for (const auto &c : kDeals)
-        check(std::abs(terminal_utility(c, "bb")) > std::abs(terminal_utility(c, "xx")),
+        check(std::abs(terminal_oop_utility(c, "bb")) > std::abs(terminal_oop_utility(c, "xx")),
               "bb pays more than xx: " + c);
 
     // 6. "xbb" and "bb" both end in a called bet -- same money in the pot.
     for (const auto &c : kDeals)
-        check(terminal_utility(c, "xbb") == terminal_utility(c, "bb"),
+        check(terminal_oop_utility(c, "xbb") == terminal_oop_utility(c, "bb"),
               "xbb == bb: " + c);
 }
 
