@@ -18,4 +18,12 @@ export const SOLVERS: SolverDemo[] = [
     description:
       "Counterfactual regret minimisation on 3-card poker. Watch exploitability fall and the average strategy settle on a Nash equilibrium.",
   },
+  {
+    game: "Kuhn poker",
+    solver: "CFR+",
+    href: "/kuhn/cfr-plus",
+    title: "Kuhn poker · CFR+",
+    description:
+      "CFR with regret-matching+: cumulative regrets are clamped at zero. Same game and measurements as vanilla CFR, for comparison.",
+  },
 ];

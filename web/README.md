@@ -6,6 +6,7 @@ Each solver gets its own route at `/<game>/<solver>` and an entry in `src/lib/so
 | Route | Solver | Backed by |
 |---|---|---|
 | `/kuhn/cfr` | Vanilla CFR on Kuhn poker | precomputed runs in `src/data/kuhn/cfr/*.json` |
+| `/kuhn/cfr-plus` | CFR+ on Kuhn poker | precomputed runs in `src/data/kuhn/cfr-plus/*.json` |
 
 The app is fully static: solver output is generated offline and bundled, so nothing runs server-side.
 
@@ -18,7 +19,7 @@ pnpm dev
 
 ## Regenerating solver data
 
-After changing the Kuhn solver, rebuild its exporter (`kuhn/export.cpp`, CMake target `kuhn_export`)
+After changing a Kuhn solver, rebuild its exporter (`kuhn/export.cpp`, CMake target `kuhn_export`)
 and rewrite the bundled runs:
 
 ```bash

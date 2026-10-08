@@ -4,14 +4,22 @@ import { useState } from "react";
 
 import { ConvergenceChart, fmt } from "@/components/kuhn/convergence-chart";
 import { StrategyBars } from "@/components/kuhn/strategy-bars";
-import { KUHN_CFR_RUNS } from "@/data/kuhn/cfr";
-import { GAME_VALUE_OOP } from "@/lib/kuhn";
+import { type CfrRun, GAME_VALUE_OOP } from "@/lib/kuhn";
 
-export function KuhnCfrDemo() {
+// `solver` names the algorithm in the copy; `currentNote` explains its current strategy.
+export function KuhnCfrDemo({
+  runs,
+  solver,
+  currentNote,
+}: {
+  runs: CfrRun[];
+  solver: string;
+  currentNote: string;
+}) {
   const [selected, setSelected] = useState(1);
   const [mode, setMode] = useState<"average" | "current">("average");
 
-  const run = KUHN_CFR_RUNS[selected];
+  const run = runs[selected];
   const last = run.convergence[run.convergence.length - 1];
   const alpha = run.infosets.find((i) => i.key === "J")?.average[1] ?? 0;
 
@@ -20,7 +28,7 @@ export function KuhnCfrDemo() {
       <fieldset className="space-y-1">
         <legend className="text-xs font-medium text-ink-2">Iterations</legend>
         <div className="flex flex-wrap gap-1">
-          {KUHN_CFR_RUNS.map((r, i) => (
+          {runs.map((r, i) => (
             <button
               key={r.iterations}
               type="button"
@@ -101,8 +109,8 @@ export function KuhnCfrDemo() {
             <h2 className="font-semibold">Strategy by infoset</h2>
             <p className="text-sm text-ink-2">
               {mode === "average"
-                ? "The average strategy is what CFR guarantees converges to equilibrium."
-                : "The current (regret-matching) strategy keeps oscillating; it is not what converges."}
+                ? `The average strategy is what ${solver} guarantees converges to equilibrium.`
+                : currentNote}
             </p>
           </div>
           <div

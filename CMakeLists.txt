@@ -57,6 +57,7 @@ add_executable(kuhn_export
         kuhn/exploitability.cpp
         kuhn/exploitability.h
         kuhn/cfr.cpp
+        kuhn/cfr_plus.cpp
         kuhn/node.cpp
         kuhn/player.cpp
         kuhn/tree.cpp

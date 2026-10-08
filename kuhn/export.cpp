@@ -2,10 +2,10 @@
 // Created by aderugy on 06/10/2026.
 //
 
-// export.cpp -- runs vanilla CFR on Kuhn and prints the run as JSON on stdout,
+// export.cpp -- runs vanilla CFR or CFR+ on Kuhn and prints the run as JSON on stdout,
 // for the web demo (web/scripts/generate-kuhn-cfr.sh).
 //
-// usage:  kuhn_export <iterations>
+// usage:  kuhn_export <iterations> [cfr|cfr-plus]     (default: cfr)
 //
 // Output:
 // {
@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "cfr.h"
+#include "cfr_plus.h"
 #include "consts.h"
 #include "exploitability.h"
 #include "node.h"
@@ -50,8 +51,17 @@ static std::vector<int> checkpoints(const int n) {
 }
 
 int main(const int argc, char **argv) {
-    if (argc != 2) {
-        std::fprintf(stderr, "usage: %s <iterations>\n", argv[0]);
+    if (argc != 2 && argc != 3) {
+        std::fprintf(stderr, "usage: %s <iterations> [cfr|cfr-plus]\n", argv[0]);
+        return 2;
+    }
+
+    const std::string solver_name = argc == 3 ? argv[2] : "cfr";
+    double (*solver)(Tree &, const std::string &, const std::string &, double, double);
+    if (solver_name == "cfr") solver = cfr;
+    else if (solver_name == "cfr-plus") solver = cfr_plus;
+    else {
+        std::fprintf(stderr, "unknown solver '%s' (expected cfr or cfr-plus)\n", solver_name.c_str());
         return 2;
     }
 
@@ -68,7 +78,7 @@ int main(const int argc, char **argv) {
     std::printf("{\"iterations\":%d,\"convergence\":[", n);
     for (int i = 1; i <= n; i++) {
         for (const auto &c: DEALS) {
-            cfr(tree, c, "", 1.0 / 6.0, 1.0 / 6.0);
+            solver(tree, c, "", 1.0 / 6.0, 1.0 / 6.0);
         }
 
         if (i == marks[next_mark]) {

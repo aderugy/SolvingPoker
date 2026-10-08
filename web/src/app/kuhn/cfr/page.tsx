@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { KuhnCfrDemo } from "@/components/kuhn/kuhn-cfr-demo";
+import { KUHN_CFR_RUNS } from "@/data/kuhn/cfr";
 
 export const metadata: Metadata = {
   title: "Kuhn poker · CFR",
@@ -19,7 +20,11 @@ export default function KuhnCfrPage() {
           against the average strategy.
         </p>
       </div>
-      <KuhnCfrDemo />
+      <KuhnCfrDemo
+        runs={KUHN_CFR_RUNS}
+        solver="CFR"
+        currentNote="The current (regret-matching) strategy keeps oscillating; it is not what converges."
+      />
     </div>
   );
 }
