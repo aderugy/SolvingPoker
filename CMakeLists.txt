@@ -61,3 +61,15 @@ add_executable(kuhn_export
         kuhn/player.cpp
         kuhn/tree.cpp
 )
+
+# Black-box tests for cfr_plus (regret clamp, convergence, equilibrium)
+add_executable(test_kuhn_cfr_plus
+        kuhn/test_cfr_plus.cpp
+        kuhn/cfr_plus.cpp
+        kuhn/cfr_plus.h
+        kuhn/cfr.cpp
+        kuhn/exploitability.cpp
+        kuhn/node.cpp
+        kuhn/player.cpp
+        kuhn/tree.cpp
+)
