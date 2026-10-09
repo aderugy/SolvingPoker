@@ -4,9 +4,7 @@
 
 // test_best_response.cpp -- tests for best_response_value / exploitability (pass 2).
 //
-// build:  g++ -std=c++20 -Ikuhn kuhn/test_best_response.cpp kuhn/exploitability.cpp
-//              kuhn/cfr.cpp kuhn/node.cpp kuhn/player.cpp kuhn/tree.cpp -o test_best_response
-// run:    ./test_best_response
+// part of kuhn_tests (see test_main.cpp); entry point: run_best_response_tests()
 //
 // The main check is an independent ORACLE: in Kuhn the best responder has only 6 infosets
 // (3 cards x 2 decision histories), so there are just 2^6 = 64 pure strategies. We
@@ -31,21 +29,12 @@
 #include "node.h"
 #include "player.h"
 #include "tree.h"
+#include "test.h"
 
 namespace {
 
-int g_pass = 0, g_fail = 0;
-
-void check(const bool ok, const std::string &what) {
-    if (ok) { ++g_pass; return; }
-    ++g_fail;
-    std::cout << "  FAIL  " << what << "\n";
-}
-
-void check_near(const double got, const double want, const double eps, const std::string &what) {
-    check(std::abs(got - want) < eps,
-          what + "  (got " + std::to_string(got) + ", want " + std::to_string(want) + ")");
-}
+using test::check;
+using test::check_near;
 
 constexpr double kEps = 1e-9;
 constexpr double kGameValue = -1.0 / 18.0;  // Kuhn value for OOP at equilibrium
@@ -180,7 +169,7 @@ void test_convergence(const Tree &t10, const Tree &t100, const Tree &t2000) {
 
 }  // namespace
 
-int main() {
+void run_best_response_tests() {
     const Tree uniform = init_tree();
     const Tree t10 = cfr_tree(10), t100 = cfr_tree(100), t2000 = cfr_tree(2000);
 
@@ -194,7 +183,4 @@ int main() {
     }
 
     test_convergence(t10, t100, t2000);
-
-    std::cout << "\n" << g_pass << " passed, " << g_fail << " failed\n";
-    return g_fail == 0 ? 0 : 1;
 }

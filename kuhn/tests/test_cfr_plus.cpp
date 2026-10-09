@@ -4,9 +4,7 @@
 
 // test_cfr_plus.cpp -- black-box tests for cfr_plus.
 //
-// build:  g++ -std=c++20 -Ikuhn kuhn/test_cfr_plus.cpp kuhn/cfr_plus.cpp kuhn/cfr.cpp
-//              kuhn/exploitability.cpp kuhn/node.cpp kuhn/player.cpp kuhn/tree.cpp -o test_cfr_plus
-// run:    ./test_cfr_plus
+// part of kuhn_tests (see test_main.cpp); entry point: run_cfr_plus_tests()
 //
 // Only the public API is used (cfr_plus, cfr, the Tree/Node, exploitability). The checks are
 // properties CFR+ must have whatever the implementation looks like:
@@ -30,21 +28,12 @@
 #include "node.h"
 #include "player.h"
 #include "tree.h"
+#include "test.h"
 
 namespace {
 
-int g_pass = 0, g_fail = 0;
-
-void check(const bool ok, const std::string &what) {
-    if (ok) { ++g_pass; return; }
-    ++g_fail;
-    std::cout << "  FAIL  " << what << "\n";
-}
-
-void check_near(const double got, const double want, const double eps, const std::string &what) {
-    check(std::abs(got - want) < eps,
-          what + "  (got " + std::to_string(got) + ", want " + std::to_string(want) + ")");
-}
+using test::check;
+using test::check_near;
 
 constexpr double kEps = 1e-9;
 constexpr double kGameValue = -1.0 / 18.0;  // Kuhn value for OOP at equilibrium
@@ -205,7 +194,7 @@ void test_equilibrium(const Tree &tree) {
 
 }  // namespace
 
-int main() {
+void run_cfr_plus_tests() {
     test_regrets_non_negative();
     test_strategy_is_distribution();
     test_first_call_matches_cfr();
@@ -216,7 +205,4 @@ int main() {
     test_faster_than_cfr(t1000);
     test_game_value(t1000);
     test_equilibrium(t1000);
-
-    std::cout << "\n" << g_pass << " passed, " << g_fail << " failed\n";
-    return g_fail == 0 ? 0 : 1;
 }

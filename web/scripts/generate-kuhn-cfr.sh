@@ -4,7 +4,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-BIN="${1:-../cmake-build-debug/kuhn_export}"
+BIN="${1:-../cmake-build-debug/bin/kuhn_export}"
 
 cmake --build ../cmake-build-debug --target kuhn_export
 for solver in cfr cfr-plus; do

@@ -4,8 +4,7 @@
 
 // test_node.cpp -- tests for is_terminal / terminal_utility
 //
-// build:  g++ -std=c++17 -Wall -Wextra Node.cpp test_node.cpp -o test_node
-// run:    ./test_node
+// part of kuhn_tests (see test_main.cpp); entry point: run_node_tests()
 //
 // Conventions assumed:
 //   c = 2-char deal, c[0] = player 0's card, c[1] = player 1's card. Ranks 'J' < 'Q' < 'K'.
@@ -19,26 +18,22 @@
 #include <string>
 #include <vector>
 
+#include "test.h"
+
 namespace {
 
 constexpr int TODO = INT_MIN;  // placeholder for values you haven't worked out yet
 
-int g_pass = 0, g_fail = 0, g_skip = 0;
-
-void check(const bool ok, const std::string &what) {
-    if (ok) { ++g_pass; return; }
-    ++g_fail;
-    std::cout << "  FAIL  " << what << "\n";
-}
+using test::check;
 
 void check_eq(const int got, const int want, const std::string &what) {
     if (want == TODO) {
-        ++g_skip;
+        ++test::g_skip;
         std::cout << "  TODO  " << what << "  (returned " << got << ")\n";
         return;
     }
-    if (got == want) { ++g_pass; return; }
-    ++g_fail;
+    if (got == want) { ++test::g_pass; return; }
+    ++test::g_fail;
     std::cout << "  FAIL  " << what << "  expected " << want << ", got " << got << "\n";
 }
 
@@ -147,12 +142,8 @@ void test_invariants() {
 
 }  // namespace
 
-int main() {
+void run_node_tests() {
     test_is_terminal();
     test_terminal_utility_table();
     test_invariants();
-
-    std::cout << "\n" << g_pass << " passed, " << g_fail << " failed, "
-              << g_skip << " unfilled\n";
-    return g_fail == 0 ? 0 : 1;
 }
