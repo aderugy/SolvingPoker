@@ -12,3 +12,4 @@ enable_testing()
 add_executable(SolvingPoker main.cpp)
 
 add_subdirectory(kuhn)
+add_subdirectory(leduc)
